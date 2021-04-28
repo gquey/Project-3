@@ -44,70 +44,67 @@ void quickSort(int array[], int low, int high)
 }
 
 
-// Taken from module 6 lecture notes on sorting
-void merge(int arr[], int left, int mid, int right)
-{
-    // Create X ← arr[left..mid] & Y ← arr[mid+1..right]
-    int n1 = mid - left + 1;
-    int n2 = right - mid;
+int getMax(int arr[], int length) {
 
-    int* X = new int[n1];
-    int* Y = new int[n2];
+    int max = 0;
 
-    for (int i = 0; i < n1; i++)
-        X[i] = arr[left + i];
-    for (int j = 0; j < n2; j++)
-        Y[j] = arr[mid + 1 + j];
+    for (int i = 0; i <= length;  i++) {
 
-    // Merge the arrays X and Y into arr
-    int i, j, k;
-    i = 0;
-    j = 0;
-    k = left;
+        int number = arr[i];
 
-    while (i < n1 && j < n2)
-    {
-        if (X[i] <= Y[j])
-        {
-            arr[k] = X[i];
-            i++;
+        if (number > max) {
+
+            max = number;
+
         }
-        else
-        {
-            arr[k] = Y[j];
-            j++;
-        }
-        k++;
+
     }
 
-    while (i < n1)
-    {
-        arr[k] = X[i];
-        i++;
-        k++;
-    }
-    while (j < n2)
-    {
-        arr[k] = Y[j];
-        j++;
-        k++;
-    }
+    return max;
+
 }
 
 
 
-// Taken from module 6 lecture notes on sorting
-void mergeSort(int arr[], int left, int right)
-{
-    if (left < right)
-    {
-        // m is the point where the array is divided into two subarrays
-        int mid = left + (right - left) / 2;
-        mergeSort(arr, left, mid);
-        mergeSort(arr, mid + 1, right);
-        // Merge the sorted subarrays
-        merge(arr, left, mid, right);
+void countingSort(int arr[], int length) {
+
+    int max = getMax(arr, length);
+
+    int* output = new int[length + 1];
+    int* counts = new int[max + 1];
+
+    
+
+    for (int i = 0; i <= max; i++) {
+
+        counts[i] = 0;
+
+
     }
+
+    for (int i = 0; i < length; i++) {
+
+        counts[arr[i]]++;
+
+    }
+
+    for (int i = 1; i <= max; i++) {
+
+        counts[i] = counts[i] + counts[i - 1];
+
+    }
+
+    for (int i = length ; i > 0; i--) {
+
+        output[counts[arr[i]] - 1] = arr[i];
+        counts[arr[i]]--;
+
+    }
+
+    for (int i = 0; i < length; i++) {
+        arr[i] = output[i];
+    }
+
 }
 
 
@@ -145,18 +142,18 @@ int main()
 
     auto quickSort1Thou = chrono::duration_cast<chrono::nanoseconds>(end - start).count();
 
-    cout << "Quick Sort sorting time for 1000 data points : " << quickSort1Thou << endl;
+    cout << "Quick Sort sorting time for 1000 data points: " << quickSort1Thou << endl;
 
-    //merge sort
+    //Counting sort
     start = chrono::high_resolution_clock::now();
 
-    mergeSort(array1ThouY, 0, 999);
+    countingSort(array1ThouY, 999);
 
     end = chrono::high_resolution_clock::now();
 
-    auto mergeSort1Thou = chrono::duration_cast<chrono::nanoseconds>(end - start).count();
+    auto countSort1Thou = chrono::duration_cast<chrono::nanoseconds>(end - start).count();
 
-    cout << "Merge Sort sorting time for 1000 data points : " << mergeSort1Thou << endl;
+    cout << "Counting Sort sorting time for 1000 data points: " << countSort1Thou << endl;
 
     /**********************************
     *     10000 Data Points    *
@@ -186,18 +183,18 @@ int main()
 
     auto quickSortTenThou = chrono::duration_cast<chrono::nanoseconds>(end - start).count();
 
-    cout << "Quick Sort sorting time for 10000 data points : " << quickSortTenThou << endl;
+    cout << "Quick Sort sorting time for 10000 data points: " << quickSortTenThou << endl;
 
-    //merge sort
+    //Counting sort
     start = chrono::high_resolution_clock::now();
 
-    mergeSort(arrayTenThouY, 0, 9999);
+    countingSort(arrayTenThouY, 9999);
 
     end = chrono::high_resolution_clock::now();
 
-    auto mergeSortTenThou = chrono::duration_cast<chrono::nanoseconds>(end - start).count();
+    auto countSortTenThou = chrono::duration_cast<chrono::nanoseconds>(end - start).count();
 
-    cout << "Merge Sort sorting time for 10000 data points : " << mergeSortTenThou << endl;
+    cout << "Counting Sort sorting time for 10000 data points: " << countSortTenThou << endl;
 
     /**********************************
     *     100000 Data Points    *
@@ -227,18 +224,18 @@ int main()
 
     auto quickSort1HundredThou = chrono::duration_cast<chrono::nanoseconds>(end - start).count();
 
-    cout << "Quick Sort sorting time for 100000 data points : " << quickSort1HundredThou << endl;
+    cout << "Quick Sort sorting time for 100000 data points: " << quickSort1HundredThou << endl;
 
-    //merge sort
+    //Counting sort
     start = chrono::high_resolution_clock::now();
 
-    mergeSort(array1HundredThouY, 0, 99999);
+    countingSort(array1HundredThouY, 99999);
 
     end = chrono::high_resolution_clock::now();
 
-    auto mergeSort1HundredThou = chrono::duration_cast<chrono::nanoseconds>(end - start).count();
+    auto countSort1HundredThou = chrono::duration_cast<chrono::nanoseconds>(end - start).count();
 
-    cout << "Merge Sort sorting time for 100000 data points : " << mergeSort1HundredThou << endl;
+    cout << "Counting Sort sorting time for 100000 data points: " << countSort1HundredThou << endl;
 
     
 }
